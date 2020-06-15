@@ -14,7 +14,7 @@ class _LoginInicio extends State<LoginInicio> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      backgroundColor: Colors.white,
       body: Padding(
         padding: EdgeInsets.all(10),
         child: Center(
@@ -25,24 +25,29 @@ class _LoginInicio extends State<LoginInicio> {
               TextFormField(
                 autofocus: true,
                 keyboardType: TextInputType.number,
-                style: new TextStyle(color: Colors.white, fontSize: 20),
+                style: new TextStyle(color: Colors.deepOrange, fontSize: 20),
                 decoration: InputDecoration(
-                    labelText: "CPF",
-                    labelStyle: TextStyle(color: Colors.black38, fontWeight: FontWeight.w400, fontSize: 20)),
+                    labelText: "CPF: ",
+                    labelStyle: TextStyle(
+                        color: Colors.deepPurple,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 20)),
               ),
               Divider(),
               TextFormField(
                 autofocus: true,
                 obscureText: true,
                 keyboardType: TextInputType.text,
-                style: new TextStyle(color: Colors.white, fontSize: 20),
+                style: new TextStyle(color: Colors.deepOrange, fontSize: 20),
                 decoration: InputDecoration(
-                    labelText: "Senha",
-                    labelStyle: TextStyle(color: Colors.white)),
+                    labelText: "SENHA: ",
+                    labelStyle: TextStyle(
+                        color: Colors.deepPurple, fontWeight: FontWeight.w400)),
               ),
               Divider(),
               ButtonTheme(
                 height: 60.0,
+                //alignment: Alignment.centerLeft,
                 child: RaisedButton(
                     onPressed: () {
                       Navigator.push(
