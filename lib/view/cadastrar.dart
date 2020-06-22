@@ -1,6 +1,6 @@
+import 'package:dropdownfield/dropdownfield.dart';
 import 'package:flutter/material.dart';
-
-//void main() => runApp(new MyApp());
+import 'package:projeto_caso5/view/AppCell2.dart';
 
 class Cadastrar extends StatefulWidget {
   @override
@@ -9,30 +9,27 @@ class Cadastrar extends StatefulWidget {
 
 class _CadastrarState extends State<Cadastrar> {
   List<String> dataList = [];
+  final _formKey = GlobalKey<FormState>();
 
   GlobalKey<FormState> _key = new GlobalKey();
   bool _validate = false;
-  String titulo, date, participantes;
+  String nome, tempo;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      key: _formKey,
       debugShowCheckedModeBanner: false,
-      home: new Scaffold(
-        appBar: new AppBar(
-          centerTitle: true,
-          title: new Text('Ata de Reunião '),
-          backgroundColor: Colors.deepOrange,
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('AppCell '),
         ),
-        body: new SingleChildScrollView(
-          child: new Container(
-            color: Colors.white,
-            margin: new EdgeInsets.all(15.0),
-            child: new Form(
-              key: _key,
-              autovalidate: _validate,
-              child: _formUI(),
-            ),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(10),
+          child: Form(
+            key: _key,
+            autovalidate: _validate,
+            child: _formUI(),
           ),
         ),
       ),
@@ -44,152 +41,94 @@ class _CadastrarState extends State<Cadastrar> {
       children: <Widget>[
         new TextFormField(
           decoration: new InputDecoration(
-              labelText: "Título: ",
+              labelText: "Nome da Operadora: ",
               labelStyle: TextStyle(color: Colors.black)),
-          maxLength: 40,
-          validator: _validarTitulo,
+          maxLength: 10,
+          validator: _validarNome,
           onSaved: (String val) {
-            titulo = val;
+            nome = val;
           },
         ),
+        SizedBox(height: 25.0),
+        DropDownField(
+          controller: planosSelected,
+          hintText: "Escolha seu plano ",
+          enabled: true,
+          items: planos,
+          onValueChanged: (value) {
+            setState(() {
+              selectPlanos = value;
+            });
+          },
+        ),
+        SizedBox(height: 25.0),
         new TextFormField(
-            decoration: new InputDecoration(
-                labelText: "Data de Emissão:",
-                labelStyle: TextStyle(color: Colors.black)),
-            keyboardType: TextInputType.datetime,
-            maxLength: 8,
-            validator: _validarDate,
-            onSaved: (String val) {
-              date = val;
-            }),
-        new TextFormField(
-            minLines: 1,
-            maxLines: 100,
             decoration: InputDecoration(
-                labelText: "Participantes",
+                labelText: "Tempo de Ligação por (minuto): ",
                 labelStyle: TextStyle(color: Colors.black)),
-            maxLength: 40,
-            validator: _validarParticipantes,
+            maxLength: 10,
+            keyboardType: TextInputType.number,
+            validator: _validarTempo,
             onSaved: (String val) {
-              participantes = val;
+              tempo = val;
             }),
-
-        TextFormField(
-          //autofocus: true,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Hora de Inicio da Reunião:",
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-          ),
-          style: TextStyle(
-            fontSize: 28,
-          ),
-        ),
-
-        TextFormField(
-          //autofocus: true,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Hora de Termino da Reunião:",
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-          ),
-          style: TextStyle(
-            fontSize: 28,
-          ),
-        ),
-
-        TextFormField(
-          minLines: 1,
-          maxLines: 100,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Pauta da Reunião:",
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-          ),
-          style: TextStyle(
-            fontSize: 28,
-          ),
-        ),
-
-        TextFormField(
-          //autofocus: true,
-          keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            labelText: "Informe o Setor:",
-            labelStyle: TextStyle(
-              color: Colors.black,
-              fontSize: 15,
-            ),
-          ),
-          style: TextStyle(
-            fontSize: 28,
-          ),
-        ),
-
-        //height: 20,
-        //),
-        SizedBox(height: 15.0),
+        SizedBox(height: 25.0),
         RaisedButton(
-          onPressed: _sendForm,
-          child: new Text('Registrar Ata'),
+          onPressed: () {
+            if (_sendForm()) {}
+          },
+          child: new Text('Calcular'),
         ),
       ],
     );
   }
 
-  String _validarTitulo(String value) {
+  String _validarNome(String value) {
     String patttern = r'(^[a-zA-Z ]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return "Informe o Titulo da Ata";
+      return "Informe o seu Nome";
     } else if (!regExp.hasMatch(value)) {
       return "O nome deve conter caracteres de a-z ou A-Z";
     }
     return null;
   }
 
-  String _validarParticipantes(String value) {
+  String _validarTempo(String value) {
     String patttern = r'(^[a-zA-Z ]*$)';
     RegExp regExp = new RegExp(patttern);
     if (value.length == 0) {
-      return "Informe os nomes dos participantes";
+      return "Informe o tempo de Ligações";
     } else if (!regExp.hasMatch(value)) {
       return null;
     }
     return null;
   }
 
-  String _validarDate(String value) {
-    String patttern = r'(^[a-zA-Z ]*$)';
-    RegExp regExp = new RegExp(patttern);
-    if (value.length == 8) {
-      return null;
-    } else if (!regExp.hasMatch(value)) {
-      return "A data nao deve conter nenhum tipo de caracter. Ex: 12345678";
-    }
-    return null;
-  }
-
-  _sendForm() {
+  bool _sendForm() {
     if (_key.currentState.validate()) {
       _key.currentState.save();
-      print("Titulo $titulo");
-      print("Data $date");
-      print("Participantes $participantes");
+      print("Nome $nome");
+      //print("Plano $plano");
+      print("Tempo $tempo");
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => AppCell()),
+      );
     } else {
       setState(() {
-        _validate = true;
+        return _validate = true;
       });
     }
   }
 }
-//
+
+String selectPlanos = "";
+
+final planosSelected = TextEditingController();
+
+List<String> planos = [
+  "Pré-Pago",
+  "Pós-Pago",
+  "Controle",
+];
